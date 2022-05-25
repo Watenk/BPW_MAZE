@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MazeGenerator
@@ -56,11 +57,31 @@ namespace MazeGenerator
             for (int i = 0; i < roomList.Count; i++)
             {
                 Room roomOne = roomList[i];
-                Room roomTwo = roomList[i + Random.Range(1, roomList.Count) % roomList.Count];
+                Room roomTwo = roomList[(i + Random.Range(1, roomList.Count)) % roomList.Count];
                 ConnectRooms(roomOne, roomTwo);
             }
 
+            Walls();
             SpawnMaze();
+        }
+
+        public void Walls()
+        {
+            var keys = mazeDictionary.Keys.ToList();
+            foreach(var kv in keys)
+            {
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        if(Mathf.Abs(x) == Mathf.Abs(z)) { continue; }
+
+                        Vector3Int newPos = kv + new Vector3Int(x, 0, z);
+                        if(mazeDictionary.ContainsKey(newPos)) { continue; }
+                        mazeDictionary.Add(newPos, TileType.Wall);
+                    }
+                }
+            }
         }
 
         public void ConnectRooms(Room _roomOne, Room _roomTwo)
@@ -124,10 +145,11 @@ namespace MazeGenerator
                 switch (kv.Value)
                 {
                     case TileType.Floor:
-                        Instantiate(wall, kv.Key, Quaternion.identity, transform);
+                        Instantiate(floor, kv.Key, Quaternion.identity, transform);
                         break;
 
                     case TileType.Wall:
+                        Instantiate(wall, kv.Key, Quaternion.identity, transform);
                         break;
                 }
             }

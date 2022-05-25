@@ -166,13 +166,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2274942c1813e4d9f172a76d7c6314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 100
-  gridHeight: 100
+  gridWidth: 50
+  gridHeight: 50
   rooms: 10
   minRoomSize: 3
   maxRoomSize: 7
   floor: {fileID: 4303897617555206106, guid: bf3cc50d3ff964d4088ff2355b557cf8, type: 3}
-  wall: {fileID: 4684211855862003092, guid: a0a41b261c7e5a4499c90bb2e6429840, type: 3}
+  wall: {fileID: 8022736520082907503, guid: 802ce0d897a19284389407c1d68ba806, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
