@@ -39,10 +39,10 @@ namespace MazeGenerator
                 int minX = Random.Range(0, gridWidth);
                 int maxX = minX + Random.Range(minRoomSize, maxRoomSize + 1);
                 int minZ = Random.Range(0, gridWidth);
-                int maxZ = minX + Random.Range(minRoomSize, maxRoomSize + 1);
+                int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize + 1);
 
                 //New Room
-                Room room = new Room(minX, maxX, minZ, minZ);
+                Room room = new Room(minX, maxX, minZ, maxZ);
                 if (CanRoomFit(room))
                 {
                     AddRoomToMaze(room);
@@ -52,15 +52,49 @@ namespace MazeGenerator
                     i--;
                 }
             }
-            print("All rooms generated " + roomList.Count + " " + mazeDictionary.Count);
+            //Connect Rooms With Corridors
+            for (int i = 0; i < roomList.Count; i++)
+            {
+                Room roomOne = roomList[i];
+                Room roomTwo = roomList[i + Random.Range(1, roomList.Count) % roomList.Count];
+                ConnectRooms(roomOne, roomTwo);
+            }
+
             SpawnMaze();
+        }
+
+        public void ConnectRooms(Room _roomOne, Room _roomTwo)
+        {
+            Vector3Int posOne = _roomOne.GetCenter();
+            Vector3Int posTwo = _roomTwo.GetCenter();
+
+            int x = 0;
+            //X-As
+            int directionX = posTwo.x > posOne.x ? 1 : -1;
+
+            for (x = posOne.x; x != posTwo.x; x += directionX)
+            {
+                Vector3Int pos = new Vector3Int(x, 0, posOne.z);
+                if (mazeDictionary.ContainsKey(pos)) { continue; }
+                mazeDictionary.Add(pos, TileType.Floor);
+            }
+
+            //Z-As
+            int directionZ = posTwo.z > posOne.z ? 1 : -1;
+
+            for (int z = posOne.z; z != posTwo.z; z += directionZ)
+            {
+                Vector3Int pos = new Vector3Int(x, 0, z);
+                if (mazeDictionary.ContainsKey(pos)) { continue; }
+                mazeDictionary.Add(pos, TileType.Floor);
+            }
         }
 
         public bool CanRoomFit(Room room)
         {
-            for (int x = room.minX; x < room.maxX; x++)
+            for (int x = room.minX-1; x < room.maxX+1; x++)
             {
-                for (int z = room.minZ; z < room.maxZ; z++)
+                for (int z = room.minZ-1; z < room.maxZ+1; z++)
                 {
                     if (mazeDictionary.ContainsKey(new Vector3Int(x, 0, z)))
                     {
@@ -82,6 +116,7 @@ namespace MazeGenerator
             }
             roomList.Add(room);
         }
+
         public void SpawnMaze()
         {
             foreach (KeyValuePair<Vector3Int, TileType> kv in mazeDictionary)
@@ -107,7 +142,12 @@ namespace MazeGenerator
             minX = _minX;
             maxX = _maxX;
             minZ = _minZ;
-            minZ = _maxZ;
+            maxZ = _maxZ;
+        }
+
+        public Vector3Int GetCenter()
+        {
+            return new Vector3Int(Mathf.RoundToInt(Mathf.Lerp((float)minX, (float)maxX, 0.5f)), 0, Mathf.RoundToInt(Mathf.Lerp((float)minZ, (float)maxZ, 0.5f)));
         }
     }
 }
