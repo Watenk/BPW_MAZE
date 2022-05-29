@@ -263,11 +263,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridX: 100
   gridY: 100
-  rooms: 30
+  rooms: 50
   minRoomSize: 3
   maxRoomSize: 10
-  floor: {fileID: 6262208641099289133, guid: 2ae4d5f089ad0334e993f5601f33c461, type: 3}
-  wall: {fileID: 8022736520082907503, guid: 802ce0d897a19284389407c1d68ba806, type: 3}
+  floor: {fileID: 3198719759093736796, guid: f03c8a1fc64e2554ab8a0cb10888f4f3, type: 3}
+  wall: {fileID: 3198719759093736796, guid: f58678a3ea8e830439f42f43538ffb04, type: 3}
 --- !u!1 &683807349
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,6 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed18c2a4a3892a4f94655d069de10e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +515,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1748060342}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 683807350}

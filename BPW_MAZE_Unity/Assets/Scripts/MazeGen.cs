@@ -124,6 +124,7 @@ namespace MazeGenerator
                 mazeDictionary.Add(pos, TileType.Floor);
             }
         }
+
         public void Walls()
         {
             var keys = mazeDictionary.Keys.ToList();
@@ -150,11 +151,11 @@ namespace MazeGenerator
                 switch (kv.Value)
                 {
                     case TileType.Floor:
-                        Instantiate(floor, kv.Key, Quaternion.identity, transform);
+                        Instantiate(floor, kv.Key, Quaternion.Euler(-90, 0, 0), transform);
                         break;
 
                     case TileType.Wall:
-                        Instantiate(wall, kv.Key, Quaternion.identity, transform);
+                        Instantiate(wall, kv.Key, Quaternion.Euler(-90, 0, 0), transform);
                         break;
                 }
             }
