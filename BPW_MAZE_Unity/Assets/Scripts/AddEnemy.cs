@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class AddEnemy : MonoBehaviour
 {
-    //RoomEnemy
-
-    public void addRoomEnemy(GameObject enemy, Vector3 location, float _damage, float _health)
+    public void addEnemy(GameObject enemy, Vector3 location, float _damage, float _health)
     {
-        Instantiate(enemy, location, Quaternion.identity);
-
-        damage = _damage;
-        health = _health;
+        Enemy newEnemy = new Enemy();
+        newEnemy.enemy = Instantiate(enemy, location, Quaternion.identity);
     }
 }
 
 public class Enemy
 {
     public GameObject enemy;
-    float damage;
-    float health;
+    public float damage;
+    public float health;
+
+    public Enemy()
+    {
+
+    }
 }

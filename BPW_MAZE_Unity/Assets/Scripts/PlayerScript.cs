@@ -113,10 +113,6 @@ public class PlayerScript : MonoBehaviour
     //MoveFlashlight
     private IEnumerator MoveFlashLight(Vector3 targetRotation)
     {
-        //Start Moving
-        isMoving = true;
-        canMove = false;
-
         float elapsedTime = 0;
 
         while (elapsedTime < timeToMove)
@@ -128,9 +124,6 @@ public class PlayerScript : MonoBehaviour
         }
         flashlight.transform.rotation = Quaternion.Euler(targetRotation.x, 90, 90);
         currentRotation = new Vector3(targetRotation.x, 90, 90);
-
-        isMoving = false;
-        canMove = true;
     }
 
     public void SpawnPlayer()

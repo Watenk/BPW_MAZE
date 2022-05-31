@@ -8,6 +8,10 @@ public class EnemyAI : MonoBehaviour
     //Refrences
     PlayerScript player;
 
+    //Enemy Stats
+    public float health;
+    public float damage;
+
     private void Start()
     {
         //Refrences
@@ -21,8 +25,6 @@ public class EnemyAI : MonoBehaviour
         //Unsub from OnNextTurn
         player.OnNextTurn -= AI;
     }
-
-
 
     public void AI()
     {

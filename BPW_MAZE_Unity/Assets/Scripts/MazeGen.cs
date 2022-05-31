@@ -26,36 +26,31 @@ namespace MazeGenerator
         public GameObject floor;
         public GameObject wall;
 
-        //Maze Dictionary
+        //Maze Dictionary/lists
         public Dictionary<Vector3Int, TileType> mazeDictionary = new Dictionary<Vector3Int, TileType>();
         public List<Room> roomList = new List<Room>();
 
         //Reference
         private PlayerScript playerScript;
-        private Enemy enemy;
+        private AddEnemy addEnemy;
 
         void Start()
         {
             //Reference
             playerScript = FindObjectOfType<PlayerScript>();
+            addEnemy = FindObjectOfType<AddEnemy>();
 
-            Generate();
-        }
+            //Generate Maze
+            GenerateRooms();
+            GenerateWalls();
 
-        //Generate Rooms
-        public void Generate()
-        {
-            //Maze
-            Rooms();
-            Walls();
-            //Enemy's
-            RoomEnemy();
-            //Player
+            SpawnEnemys();
+
             playerScript.SpawnPlayer();
             SpawnMaze();
         }
 
-        public void Rooms()
+        public void GenerateRooms()
         {
             for (int i = 0; i < roomsAmount; i++)
             {
@@ -67,7 +62,7 @@ namespace MazeGenerator
 
                 //New Room
                 Room room = new Room(minX, maxX, minY, maxY);
-                if (CanRoomFit(room))
+                if (CanRoomFitInGrid(room))
                 {
                     AddRoomToMaze(room);
                 }
@@ -85,7 +80,7 @@ namespace MazeGenerator
             }
         }
 
-        public bool CanRoomFit(Room room)
+        public bool CanRoomFitInGrid(Room room)
         {
             for (int x = room.minX - 1; x < room.maxX + 1; x++)
             {
@@ -139,7 +134,7 @@ namespace MazeGenerator
             }
         }
 
-        public void Walls()
+        public void GenerateWalls()
         {
             var keys = mazeDictionary.Keys.ToList();
             foreach (var kv in keys)
@@ -158,13 +153,20 @@ namespace MazeGenerator
             }
         }
 
-        public void RoomEnemy()
+        public void SpawnEnemys()
         {
             for (int i = 0; i < roomEnemysAmount; i++)
             {
                 Room randomRoom = roomList[(i + Random.Range(1, roomList.Count)) % roomList.Count];
-                //enemy.addEnemy(roomEnemy, new Vector3((randomRoom.GetCenter().x), (randomRoom.GetCenter().y), -1), 2, 10);
+                addEnemy.addEnemy(roomEnemy, calcEnemySpawn(randomRoom), 2, 10);
             }
+        }
+
+        public Vector3 calcEnemySpawn(Room _randomRoom)
+        {
+            Vector3 position;
+            position = new Vector3((_randomRoom.GetCenter().x), (_randomRoom.GetCenter().y), -1);
+            return position; 
         }
 
         public void SpawnMaze()
