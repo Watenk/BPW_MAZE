@@ -11,13 +11,17 @@ namespace MazeGenerator
     {
         //Maze Settings:
         //Maze size
-        public int gridX = 100;
-        public int gridY = 100;
+        public int gridX;
+        public int gridY;
         //Rooms count
-        public int rooms = 10;
+        public int roomsAmount;
         //Rooms size
-        public int minRoomSize = 3;
-        public int maxRoomSize = 7;
+        public int minRoomSize;
+        public int maxRoomSize;
+        //Enemy's
+        public int roomEnemysAmount;
+        public GameObject roomEnemy;
+        
         //Enum Gameobjects
         public GameObject floor;
         public GameObject wall;
@@ -26,12 +30,13 @@ namespace MazeGenerator
         public Dictionary<Vector3Int, TileType> mazeDictionary = new Dictionary<Vector3Int, TileType>();
         public List<Room> roomList = new List<Room>();
 
-        //FindObject
+        //Reference
         private PlayerScript playerScript;
+        private Enemy enemy;
 
         void Start()
         {
-            //FindObject
+            //Reference
             playerScript = FindObjectOfType<PlayerScript>();
 
             Generate();
@@ -40,7 +45,19 @@ namespace MazeGenerator
         //Generate Rooms
         public void Generate()
         {
-            for (int i = 0; i < rooms; i++)
+            //Maze
+            Rooms();
+            Walls();
+            //Enemy's
+            RoomEnemy();
+            //Player
+            playerScript.SpawnPlayer();
+            SpawnMaze();
+        }
+
+        public void Rooms()
+        {
+            for (int i = 0; i < roomsAmount; i++)
             {
                 //Random Location
                 int minX = Random.Range(0, gridX);
@@ -66,9 +83,6 @@ namespace MazeGenerator
                 Room roomTwo = roomList[(i + Random.Range(1, roomList.Count)) % roomList.Count];
                 ConnectRooms(roomOne, roomTwo);
             }
-            Walls();
-            SpawnMaze();
-            playerScript.SpawnPlayer();
         }
 
         public bool CanRoomFit(Room room)
@@ -141,6 +155,15 @@ namespace MazeGenerator
                         mazeDictionary.Add(newPos, TileType.Wall);
                     }
                 }
+            }
+        }
+
+        public void RoomEnemy()
+        {
+            for (int i = 0; i < roomEnemysAmount; i++)
+            {
+                Room randomRoom = roomList[(i + Random.Range(1, roomList.Count)) % roomList.Count];
+                //enemy.addEnemy(roomEnemy, new Vector3((randomRoom.GetCenter().x), (randomRoom.GetCenter().y), -1), 2, 10);
             }
         }
 

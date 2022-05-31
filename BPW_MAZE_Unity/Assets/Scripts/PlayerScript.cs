@@ -23,7 +23,7 @@ public class PlayerScript : MonoBehaviour
 
     //NextTurn Event
     public delegate void NextTurn();
-    public event NextTurn nextTurn;
+    public event NextTurn OnNextTurn;
 
     private void Awake()
     {
@@ -102,9 +102,9 @@ public class PlayerScript : MonoBehaviour
         isMoving = false;
         //Moving done
         //nextTurn Event
-        if (nextTurn != null)
+        if (OnNextTurn != null)
         {
-            nextTurn();
+            OnNextTurn();
         }
         
         canMove = true;
