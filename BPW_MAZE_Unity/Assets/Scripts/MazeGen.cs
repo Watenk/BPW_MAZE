@@ -18,9 +18,10 @@ namespace MazeGenerator
         //Rooms size
         public int minRoomSize;
         public int maxRoomSize;
-        //Enemy's
-        public int roomEnemysAmount;
+        //Enemy's:
+        //RoomEnemy
         public GameObject roomEnemy;
+        public int roomEnemysAmount;
         
         //Enum Gameobjects
         public GameObject floor;
@@ -32,13 +33,11 @@ namespace MazeGenerator
 
         //Reference
         private PlayerScript playerScript;
-        private AddEnemy addEnemy;
 
         void Start()
         {
             //Reference
             playerScript = FindObjectOfType<PlayerScript>();
-            addEnemy = FindObjectOfType<AddEnemy>();
 
             //Generate Maze
             GenerateRooms();
@@ -112,7 +111,7 @@ namespace MazeGenerator
             Vector3Int posOne = _roomOne.GetCenter();
             Vector3Int posTwo = _roomTwo.GetCenter();
 
-            int x = 0;
+            int x;
             //X-As
             int directionX = posTwo.x > posOne.x ? 1 : -1;
 
@@ -155,14 +154,34 @@ namespace MazeGenerator
 
         public void SpawnEnemys()
         {
+            List<Room> takenRooms = new List<Room>();
+
+            //Calc random room and add x amount of enemy's
             for (int i = 0; i < roomEnemysAmount; i++)
             {
+                StartLoop:
                 Room randomRoom = roomList[(i + Random.Range(1, roomList.Count)) % roomList.Count];
-                addEnemy.addEnemy(roomEnemy, calcEnemySpawn(randomRoom), 2, 10);
+                //If RandomRoom is player spawnlocation choose new one
+                if (randomRoom == roomList[0])
+                {
+                    goto StartLoop;
+                }
+                //If RandomRoom is already taken choose new one
+                for (int j = 0; j < takenRooms.Count; j++)
+                {
+                    if (randomRoom == takenRooms[j])
+                    {
+                        goto StartLoop;
+                    }
+                }
+                Vector3 spawnLocation = CalcEnemySpawn(randomRoom);
+
+                Instantiate(roomEnemy, spawnLocation, Quaternion.identity);
+                takenRooms.Add(randomRoom);
             }
         }
 
-        public Vector3 calcEnemySpawn(Room _randomRoom)
+        public Vector3 CalcEnemySpawn(Room _randomRoom)
         {
             Vector3 position;
             position = new Vector3((_randomRoom.GetCenter().x), (_randomRoom.GetCenter().y), -1);

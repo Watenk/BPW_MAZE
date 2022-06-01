@@ -15,7 +15,6 @@ public class PlayerScript : MonoBehaviour
     private bool canMove = true;
     private bool isMoving = false;
     private Vector3 origPos, targetPos;
-    private Vector3 up, left, down, right;
 
     //FlashlightMovement
     private Vector3 currentRotation = new Vector3 (0, 90, 90);
@@ -23,7 +22,7 @@ public class PlayerScript : MonoBehaviour
 
     //NextTurn Event
     public delegate void NextTurn();
-    public event NextTurn OnNextTurn;
+    public static event NextTurn OnNextTurn;
 
     private void Awake()
     {
@@ -39,44 +38,45 @@ public class PlayerScript : MonoBehaviour
             //Player Movement
             if (Input.GetKey(KeyCode.W))
             {
-                StartCoroutine(MovePlayer(up = new Vector3(0, 1f, 0)));
+
+                StartCoroutine(MovePlayer(new Vector3(0, 1f, 0)));
             }
 
             if (Input.GetKey(KeyCode.A))
             {
-                StartCoroutine(MovePlayer(left = new Vector3(-1f, 0, 0)));
+                StartCoroutine(MovePlayer(new Vector3(-1f, 0, 0)));
             }
 
             if (Input.GetKey(KeyCode.S))
             {
-                StartCoroutine(MovePlayer(down = new Vector3(0, -1f, 0)));
+                StartCoroutine(MovePlayer(new Vector3(0, -1f, 0)));
             }
 
             if (Input.GetKey(KeyCode.D))
             {
-                StartCoroutine(MovePlayer(right = new Vector3(1f, 0, 0)));
+                StartCoroutine(MovePlayer(new Vector3(1f, 0, 0)));
             }
+        }
 
-            //Player FlashLight
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                StartCoroutine(MoveFlashLight(rightRotation));
-            }
+        //Player FlashLight
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            StartCoroutine(MoveFlashLight(rightRotation));
+        }
 
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                StartCoroutine(MoveFlashLight(downRotation));
-            }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            StartCoroutine(MoveFlashLight(downRotation));
+        }
 
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                StartCoroutine(MoveFlashLight(LeftRotation));
-            }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            StartCoroutine(MoveFlashLight(LeftRotation));
+        }
 
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
-                StartCoroutine(MoveFlashLight(upRotation));
-            }
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            StartCoroutine(MoveFlashLight(upRotation));
         }
     }
 
@@ -101,12 +101,15 @@ public class PlayerScript : MonoBehaviour
 
         isMoving = false;
         //Moving done
-        //nextTurn Event
+
+        //NextTurn Event
+        //OnNextTurn?.Invoke(); -- Short Version
         if (OnNextTurn != null)
         {
+            print("Next Turn...");
             OnNextTurn();
         }
-        
+
         canMove = true;
     }
 
