@@ -12,11 +12,11 @@ public class PlayerScript : MonoBehaviour
     //PLayerMovement
     public float timeToMove = 0.5f;
 
-    private bool canMove = true;
     private bool isMoving = false;
     private Vector3 origPos, targetPos;
 
     //FlashlightMovement
+    private bool flashlightIsMoving = false;
     private Vector3 currentRotation = new Vector3 (0, 90, 90);
     private Vector3 rightRotation = new Vector3(0, 90, 90), downRotation = new Vector3(90, 90, 90), LeftRotation = new Vector3(180, 90, 90), upRotation = new Vector3(270, 90, 90);
 
@@ -33,12 +33,11 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        if (!isMoving && canMove == true)
+        if (!isMoving)
         {
             //Player Movement
             if (Input.GetKey(KeyCode.W))
             {
-
                 StartCoroutine(MovePlayer(new Vector3(0, 1f, 0)));
             }
 
@@ -58,25 +57,28 @@ public class PlayerScript : MonoBehaviour
             }
         }
 
-        //Player FlashLight
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (!flashlightIsMoving)
         {
-            StartCoroutine(MoveFlashLight(rightRotation));
-        }
+            //Player FlashLight
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                StartCoroutine(MoveFlashLight(rightRotation));
+            }
 
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            StartCoroutine(MoveFlashLight(downRotation));
-        }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                StartCoroutine(MoveFlashLight(downRotation));
+            }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            StartCoroutine(MoveFlashLight(LeftRotation));
-        }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                StartCoroutine(MoveFlashLight(LeftRotation));
+            }
 
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            StartCoroutine(MoveFlashLight(upRotation));
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                StartCoroutine(MoveFlashLight(upRotation));
+            }
         }
     }
 
@@ -85,7 +87,6 @@ public class PlayerScript : MonoBehaviour
     {
         //Start Moving
         isMoving = true;
-        canMove = false;
 
         float elapsedTime = 0;
         origPos = transform.position;
@@ -99,24 +100,17 @@ public class PlayerScript : MonoBehaviour
         }
         transform.position = targetPos;
 
+        OnNextTurn?.Invoke();
+
         isMoving = false;
-        //Moving done
-
-        //NextTurn Event
-        //OnNextTurn?.Invoke(); -- Short Version
-        if (OnNextTurn != null)
-        {
-            print("Next Turn...");
-            OnNextTurn();
-        }
-
-        canMove = true;
     }
 
     //MoveFlashlight
     private IEnumerator MoveFlashLight(Vector3 targetRotation)
     {
         float elapsedTime = 0;
+
+        flashlightIsMoving = true;
 
         while (elapsedTime < timeToMove)
         {
@@ -127,6 +121,8 @@ public class PlayerScript : MonoBehaviour
         }
         flashlight.transform.rotation = Quaternion.Euler(targetRotation.x, 90, 90);
         currentRotation = new Vector3(targetRotation.x, 90, 90);
+
+        flashlightIsMoving = false;
     }
 
     public void SpawnPlayer()

@@ -372,7 +372,7 @@ MonoBehaviour:
   roomsAmount: 30
   minRoomSize: 5
   maxRoomSize: 15
-  roomEnemy: {fileID: 1233931425155388338, guid: d8d88d10f4c3bd84e8fab3e7ad828af3, type: 3}
+  roomEnemy: {fileID: 7655643352420383971, guid: 226717b3d54ed564a8d4f8dcfa88f87d, type: 3}
   roomEnemysAmount: 20
   floor: {fileID: 3198719759093736796, guid: f03c8a1fc64e2554ab8a0cb10888f4f3, type: 3}
   wall: {fileID: 3198719759093736796, guid: f58678a3ea8e830439f42f43538ffb04, type: 3}

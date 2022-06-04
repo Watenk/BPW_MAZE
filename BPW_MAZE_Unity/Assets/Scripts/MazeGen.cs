@@ -184,7 +184,7 @@ namespace MazeGenerator
         public Vector3 CalcEnemySpawn(Room _randomRoom)
         {
             Vector3 position;
-            position = new Vector3((_randomRoom.GetCenter().x), (_randomRoom.GetCenter().y), -1);
+            position = new Vector3((_randomRoom.GetCenter().x), (_randomRoom.GetCenter().y), -0.1f);
             return position; 
         }
 
