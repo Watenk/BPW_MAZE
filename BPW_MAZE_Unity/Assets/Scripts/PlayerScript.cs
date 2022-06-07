@@ -9,10 +9,16 @@ public class PlayerScript : MonoBehaviour
     private MazeGenerator.MazeGen mazeGenerator;
     private FindFlashlight flashlight;
 
-    //PLayerMovement
-    public float timeToMove = 0.5f;
+    //Attack
+    public bool playerIsBeeingAttacked = false;
 
-    private bool isMoving = false;
+    //PLayerMovement
+    public Vector3 playerLocation;
+    public float timeToMove = 0.5f;
+    public float timeBetweenMove = 0.5f;
+    float moveTimer;
+
+    private bool canMove = false;
     private Vector3 origPos, targetPos;
 
     //FlashlightMovement
@@ -33,7 +39,25 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        if (!isMoving)
+        playerLocation = transform.position;
+
+        if (playerIsBeeingAttacked == true)
+        {
+            canMove = false;
+        }
+
+        //Move Timer
+        if (moveTimer >= 0)
+        {
+            moveTimer -= Time.deltaTime;
+        }
+        if (moveTimer <= 0 && playerIsBeeingAttacked == false)
+        {
+            canMove = true;
+        }
+
+        //Player Input
+        if (canMove)
         {
             //Player Movement
             if (Input.GetKey(KeyCode.W))
@@ -85,10 +109,11 @@ public class PlayerScript : MonoBehaviour
     //MovePlayer
     private IEnumerator MovePlayer(Vector3 direction)
     {
-        //Start Moving
-        isMoving = true;
-
         float elapsedTime = 0;
+
+        canMove = false;
+        moveTimer = timeBetweenMove;
+
         origPos = transform.position;
         targetPos = origPos + direction;
 
@@ -98,11 +123,10 @@ public class PlayerScript : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
         transform.position = targetPos;
 
         OnNextTurn?.Invoke();
-
-        isMoving = false;
     }
 
     //MoveFlashlight
@@ -133,6 +157,9 @@ public class PlayerScript : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        targetPos = origPos;
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            targetPos = origPos;
+        }
     }
 }

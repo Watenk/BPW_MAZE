@@ -31,12 +31,10 @@ namespace MazeGenerator
         public Dictionary<Vector3Int, TileType> mazeDictionary = new Dictionary<Vector3Int, TileType>();
         public List<Room> roomList = new List<Room>();
 
-        //Reference
         private PlayerScript playerScript;
 
         void Start()
         {
-            //Reference
             playerScript = FindObjectOfType<PlayerScript>();
 
             //Generate Maze
