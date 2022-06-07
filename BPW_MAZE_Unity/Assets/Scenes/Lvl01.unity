@@ -425,10 +425,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed18c2a4a3892a4f94655d069de10e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   playerIsBeeingAttacked: 0
   playerLocation: {x: 0, y: 0, z: 0}
   timeToMove: 0.5
-  timeBetweenMove: 0.6
+  timeBetweenMove: 0.51
 --- !u!65 &683807352
 BoxCollider:
   m_ObjectHideFlags: 0

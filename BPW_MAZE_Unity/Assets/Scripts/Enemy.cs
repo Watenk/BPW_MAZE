@@ -45,6 +45,14 @@ public class Enemy : MonoBehaviour
         leftCollider = gameObject.transform.GetChild(3).gameObject.GetComponent<EnemyCollision>();
     }
 
+    public void Update()
+    {
+        if (upCollider.collidingWithPlayer || rightCollider.collidingWithPlayer || downCollider.collidingWithPlayer || leftCollider.collidingWithPlayer)
+        {
+            state = State.Attack;
+        }
+    }
+
     public void AI()
     {
         switch (state)
@@ -70,11 +78,6 @@ public class Enemy : MonoBehaviour
         if (sightCollider.detectingPlayer == true)
         {
             state = State.Follow;
-        }
-
-        if (upCollider.collidingWithPlayer || rightCollider.collidingWithPlayer || downCollider.collidingWithPlayer || leftCollider.collidingWithPlayer)
-        {
-            state = State.Attack;
         }
     }
 
@@ -201,12 +204,6 @@ public class Enemy : MonoBehaviour
                     Follow();
                 }
             }
-
-            if (leftCollider.collidingWithPlayer == true)
-            {
-                state = State.Attack;
-            }
-
             else
             {
                 StartCoroutine(MoveEnemy(new Vector3(-1f, 0, 0)));

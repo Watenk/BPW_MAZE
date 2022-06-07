@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    public enum State { Wandering, Attacking }
+    public State state;
+
     //FindObject
     private MazeGenerator.MazeGen mazeGenerator;
     private FindFlashlight flashlight;
@@ -39,23 +42,40 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
+        switch(state)
+        {
+            case State.Wandering:
+                Wandering();
+                break;
+
+            case State.Attacking:
+                Attacking();
+                break;
+        }
+
         playerLocation = transform.position;
+
+        Timers();
+        FlashLight();
 
         if (playerIsBeeingAttacked == true)
         {
-            canMove = false;
+            state = State.Attacking;
         }
+    }
 
-        //Move Timer
-        if (moveTimer >= 0)
-        {
-            moveTimer -= Time.deltaTime;
-        }
-        if (moveTimer <= 0 && playerIsBeeingAttacked == false)
-        {
-            canMove = true;
-        }
+    public void Wandering()
+    {
+        PlayerMovement();
+    }
 
+    public void Attacking()
+    {
+        canMove = false;
+    }
+
+    public void PlayerMovement()
+    {
         //Player Input
         if (canMove)
         {
@@ -80,7 +100,10 @@ public class PlayerScript : MonoBehaviour
                 StartCoroutine(MovePlayer(new Vector3(1f, 0, 0)));
             }
         }
-
+    }
+    
+    public void FlashLight()
+    {
         if (!flashlightIsMoving)
         {
             //Player FlashLight
@@ -106,7 +129,19 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    //MovePlayer
+    public void Timers()
+    {
+        //Move Timer
+        if (moveTimer >= 0)
+        {
+            moveTimer -= Time.deltaTime;
+        }
+        if (moveTimer <= 0 && playerIsBeeingAttacked == false)
+        {
+            canMove = true;
+        }
+    }
+    
     private IEnumerator MovePlayer(Vector3 direction)
     {
         float elapsedTime = 0;
