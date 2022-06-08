@@ -12,6 +12,7 @@ public class UI : MonoBehaviour
 
     public Slider healthSlider;
     public TextMeshProUGUI turnsLeft;
+    public GameObject inventory;
 
     private void Start()
     {
@@ -31,6 +32,18 @@ public class UI : MonoBehaviour
         else
         {
             attackMenu.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (inventory.activeSelf == false)
+            {
+                inventory.SetActive(true);
+            }
+            else
+            {
+                inventory.SetActive(false);
+            }
         }
 
         healthSlider.value = playerScript.playerHealth;

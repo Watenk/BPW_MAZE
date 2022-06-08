@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     public State state;
 
     public int damage;
+    public int maxRandomDamage = 10;
+    public int minRandomDamage = 7;
     public int health;
     public float timeToMove = 0.5f;
     public int scoreOnKill = 10;
@@ -50,9 +52,13 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
-        if (upCollider.collidingWithPlayer || rightCollider.collidingWithPlayer || downCollider.collidingWithPlayer || leftCollider.collidingWithPlayer)
+        if (state != State.Attack)
         {
-            state = State.Attack;
+            if (upCollider.collidingWithPlayer || rightCollider.collidingWithPlayer || downCollider.collidingWithPlayer || leftCollider.collidingWithPlayer)
+            {
+                state = State.Attack;
+                AI();
+            }
         }
 
         if (health <= 0)
@@ -78,14 +84,17 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        if (sightCollider.detectingPlayer == false)
+        if (state != State.Attack)
         {
-            state = State.Patrol;
-        }
+            if (sightCollider.detectingPlayer == false)
+            {
+                state = State.Patrol;
+            }
 
-        if (sightCollider.detectingPlayer == true)
-        {
-            state = State.Follow;
+            if (sightCollider.detectingPlayer == true)
+            {
+                state = State.Follow;
+            }
         }
     }
 
@@ -103,9 +112,16 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
-        playerScript.canMove = false;
-        playerScript.playerIsBeeingAttacked = true;
+        if (playerScript.playerIsBeeingAttacked == false)
+        {
+            playerScript.canMove = false;
+            playerScript.playerIsBeeingAttacked = true;
+        }
+        else
+        {
+        damage = Random.Range(minRandomDamage, maxRandomDamage);
         playerScript.playerHealth -= damage;
+        }
     }
 
     public void Move()
@@ -133,15 +149,9 @@ public class Enemy : MonoBehaviour
                     Follow();
                 }
             }
-            
-            if (upCollider.collidingWithPlayer == true)
-            {
-                state = State.Attack;
-            }
-
             else
             {
-                StartCoroutine(MoveEnemy(new Vector3(0, 1f, 0)));
+            StartCoroutine(MoveEnemy(new Vector3(0, 1f, 0)));
             }
         }
 
@@ -160,15 +170,9 @@ public class Enemy : MonoBehaviour
                     Follow();
                 }
             }
-
-            if (rightCollider.collidingWithPlayer == true)
-            {
-                state = State.Attack;
-            }
-
             else
             {
-                StartCoroutine(MoveEnemy(new Vector3(1f, 0, 0)));
+            StartCoroutine(MoveEnemy(new Vector3(1f, 0, 0)));
             }
         }
 
@@ -187,15 +191,9 @@ public class Enemy : MonoBehaviour
                     Follow();
                 }
             }
-
-            if (downCollider.collidingWithPlayer == true)
-            {
-                state = State.Attack;
-            }
-
             else
             {
-                StartCoroutine(MoveEnemy(new Vector3(0, -1f, 0)));
+            StartCoroutine(MoveEnemy(new Vector3(0, -1f, 0)));
             }
         }
 
