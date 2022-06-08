@@ -7,9 +7,10 @@ public class Enemy : MonoBehaviour
     public enum State { Patrol, Follow, Attack }
     public State state;
 
-    public float damage;
-    public float health;
+    public int damage;
+    public int health;
     public float timeToMove = 0.5f;
+    public int scoreOnKill = 10;
 
     EnemyPlayerDetection sightCollider;
 
@@ -30,12 +31,14 @@ public class Enemy : MonoBehaviour
     int distanceYFromPlayer;
 
     private PlayerScript playerScript;
+    private GameManager gameManager;
 
     void Start()
     {
         PlayerScript.OnNextTurn += AI;
 
         playerScript = FindObjectOfType<PlayerScript>();
+        gameManager = FindObjectOfType<GameManager>();
 
         sightCollider = gameObject.transform.GetChild(4).gameObject.GetComponent<EnemyPlayerDetection>();
 
@@ -50,6 +53,11 @@ public class Enemy : MonoBehaviour
         if (upCollider.collidingWithPlayer || rightCollider.collidingWithPlayer || downCollider.collidingWithPlayer || leftCollider.collidingWithPlayer)
         {
             state = State.Attack;
+        }
+
+        if (health <= 0)
+        {
+            Death();
         }
     }
 
@@ -95,7 +103,9 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
+        playerScript.canMove = false;
         playerScript.playerIsBeeingAttacked = true;
+        playerScript.playerHealth -= damage;
     }
 
     public void Move()
@@ -262,8 +272,12 @@ public class Enemy : MonoBehaviour
         transform.position = targetPos;
     }
 
-    public void OnDeath()
+    public void Death()
     {
+        playerScript.playerIsBeeingAttacked = false;
+        playerScript.canMove = true;
+        gameManager.score += scoreOnKill;
         PlayerScript.OnNextTurn -= AI;
+        Destroy(gameObject);
     }
 }

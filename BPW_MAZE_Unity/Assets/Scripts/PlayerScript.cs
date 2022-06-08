@@ -8,9 +8,13 @@ public class PlayerScript : MonoBehaviour
     public enum State { Wandering, Attacking }
     public State state;
 
+    public int playerHealth = 50;
+    public int damage = 5;
+
     //FindObject
     private MazeGenerator.MazeGen mazeGenerator;
     private FindFlashlight flashlight;
+    private AttackCollider attackCollider;
 
     //Attack
     public bool playerIsBeeingAttacked = false;
@@ -18,15 +22,15 @@ public class PlayerScript : MonoBehaviour
     //PLayerMovement
     public Vector3 playerLocation;
     public float timeToMove = 0.5f;
-    public float timeBetweenMove = 0.5f;
+    public float timeBetweenMove = 0.51f;
     float moveTimer;
 
-    private bool canMove = false;
+    public bool canMove = false;
     private Vector3 origPos, targetPos;
 
     //FlashlightMovement
     private bool flashlightIsMoving = false;
-    private Vector3 currentRotation = new Vector3 (0, 90, 90);
+    private Vector3 currentRotation = new Vector3(0, 90, 90);
     private Vector3 rightRotation = new Vector3(0, 90, 90), downRotation = new Vector3(90, 90, 90), LeftRotation = new Vector3(180, 90, 90), upRotation = new Vector3(270, 90, 90);
 
     //NextTurn Event
@@ -38,6 +42,7 @@ public class PlayerScript : MonoBehaviour
         //FindObject
         mazeGenerator = FindObjectOfType<MazeGenerator.MazeGen>();
         flashlight = FindObjectOfType<FindFlashlight>();
+        attackCollider = FindObjectOfType<AttackCollider>();
     }
 
     void Update()
@@ -49,7 +54,6 @@ public class PlayerScript : MonoBehaviour
                 break;
 
             case State.Attacking:
-                Attacking();
                 break;
         }
 
@@ -62,6 +66,11 @@ public class PlayerScript : MonoBehaviour
         {
             state = State.Attacking;
         }
+
+        if (playerIsBeeingAttacked == false)
+        {
+            state = State.Wandering;
+        }
     }
 
     public void Wandering()
@@ -69,9 +78,10 @@ public class PlayerScript : MonoBehaviour
         PlayerMovement();
     }
 
-    public void Attacking()
+    public void SwordAttack()
     {
-        canMove = false;
+        attackCollider.targetEnemy.health -= damage;
+        OnNextTurn?.Invoke();
     }
 
     public void PlayerMovement()
