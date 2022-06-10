@@ -8,10 +8,16 @@ public class UI : MonoBehaviour
 {
     PlayerScript playerScript;
     GameManager gameManager;
+
     GameObject attackMenu;
 
+    //HeathBar
     public Slider healthSlider;
+    public TextMeshProUGUI healthText;
+
+    //Turns
     public TextMeshProUGUI turnsLeft;
+
     public GameObject inventory;
 
     private void Start()
@@ -47,6 +53,8 @@ public class UI : MonoBehaviour
         }
 
         healthSlider.value = playerScript.playerHealth;
+        healthText.text = playerScript.playerHealth.ToString();
+
         turnsLeft.text = gameManager.turnsLeft.ToString();
     }
 }

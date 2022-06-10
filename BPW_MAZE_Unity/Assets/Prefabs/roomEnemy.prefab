@@ -500,3 +500,4 @@ MonoBehaviour:
   health: 10
   timeToMove: 0.5
   scoreOnKill: 10
+  heart: {fileID: 7836362036156800692, guid: 4c45a321a9ee4194a9dfe5b162cbd6dc, type: 3}

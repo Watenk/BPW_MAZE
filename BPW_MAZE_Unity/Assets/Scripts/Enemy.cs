@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour
     Vector3 targetPos;
     Vector3 playerPos;
 
+    public GameObject heart;
+
     int infiniteLoopDetection;
     readonly int infiniteDetectionLoopAmount = 50;
 
@@ -275,6 +277,7 @@ public class Enemy : MonoBehaviour
         playerScript.playerIsBeeingAttacked = false;
         playerScript.canMove = true;
         gameManager.score += scoreOnKill;
+        Instantiate(heart, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
         PlayerScript.OnNextTurn -= AI;
         Destroy(gameObject);
     }
